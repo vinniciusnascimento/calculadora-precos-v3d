@@ -1,11 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora de Preços - V3D</title>
 </head>
+
 <body>
-    
+    <img src="src/Logo_V3D.png" alt="Loggo V3D" class="logo">
+    <h1>Calculadora de Preços</h1>
+    <div class="inputs">
+        <div class="box-input">
+            <label for="time">Tempo de Impressão</label>
+            <input type="number" name="time" id="time">
+        </div>
+        <div class="box-input">
+            <label for="quantity">Qtd Filamento (g)</label>
+            <input type="number" name="quantity" id="quantity">
+        </div>
+        <div class="box-input">
+            <label for="price">Preço Filamento (R$/Kg)</label>
+            <input type="number" name="price" id="price">
+        </div>
+    </div>
+
+    <h1>Adicionais</h1>
+    <div class="inputs">
+        <div class="box-input">
+            <label for="product">Produto</label>
+            <input type="text" name="product" id="product">
+        </div>
+        <div class="box-input">
+            <label for="price-add">Preço</label>
+            <input type="number" name="price-add" id="price-add">
+        </div>
+        <div class="box-input">
+            <label for="quantity-add">Quantidade</label>
+            <input type="number" name="quantity-add" id="quantity-add">
+        </div>
+    </div>
+    <table>
+        <tr>
+            <th>Produto</th>
+            <th>Preço</th>
+            <th>Quantidade</th>
+        </tr>
+
+        <tr>
+            <td>Caixa</td>
+            <td>R$ 20,90</td>
+            <td>1</td>
+        </tr>
+    </table>
+
+    <div class="final">
+        <div class="box-input">
+            <label for="profit">Lucro (0-100%)</label>
+            <input type="number" name="profit" id="profit">
+        </div>
+
+        <div>
+            <h2>Total: <span>R$0,00</span></h2>
+        </div>
+    </div>
 </body>
+
 </html>
