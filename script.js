@@ -57,6 +57,7 @@ function calcular(){
     let qtdFilamento = document.querySelector("#quantity");
     let priceFilamento = document.querySelector("#price");
     let profit = Number(document.querySelector("#profit").value)
+    let labor = Number(document.querySelector("#labor").value)
 
     let custoTimePrint = Number(timePrint.value) * 0.2;
     let custoFilamento = (Number(qtdFilamento.value) / 1000) * Number(priceFilamento.value);
@@ -65,10 +66,11 @@ function calcular(){
         return total + (item.price * item.quantity)
     }, 0)
 
-    let custoTotal = (custoFilamento + custoTimePrint + totalAdds) * (1 + profit / 100);
+    let custoTotal = (custoFilamento + custoTimePrint + totalAdds + labor) * (1 + profit / 100);
 
     console.log("Custo tempo:", custoTimePrint);
     console.log("Custo filamento:", custoFilamento);
+    console.log("Mão de Obra:", labor);
     console.log(custoTotal)
 
     totalText.textContent = `R$${custoTotal.toFixed(2)}`;
