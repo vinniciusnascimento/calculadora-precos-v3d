@@ -380,3 +380,56 @@ input[type="number"] {
         overflow-x: auto;
     }
 }
+
+/* =========================
+   BOTÃO EXPORTAR PDF
+========================= */
+
+#generatePdf {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    width: 190px;
+    height: 50px;
+
+    margin: 25px 0 0 auto;
+    padding: 0 20px;
+
+    background-color: #60F637;
+    color: #071006;
+
+    border: none;
+    border-radius: 10px;
+
+    font-family: "DM Sans", sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+}
+
+#generatePdf:hover {
+    background-color: #79ff54;
+
+    box-shadow:
+        0 0 20px rgba(96, 246, 55, 0.25);
+
+    transform: translateY(-2px);
+}
+
+#generatePdf:active {
+    transform: translateY(0);
+}
+
+@media (max-width: 650px) {
+    #generatePdf {
+        width: 100%;
+    }
+}
