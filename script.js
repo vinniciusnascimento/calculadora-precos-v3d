@@ -4,26 +4,24 @@ let quantity = document.querySelector("#quantity-add");
 let button_add = document.querySelector("#add");
 
 let table = document.querySelector("table");
+let totalText = document.querySelector("span");
 
 let adds = [];
 
 button_add.addEventListener("click", () => {
 
-    // cria o novo produto
     let newProduct = {
-        id: adds.length + 1,
+        id: Date.now(),
         product: product.value,
         price: Number(price.value),
         quantity: Number(quantity.value)
     };
 
-    // adiciona ao array
     adds.push(newProduct);
 
-    // adiciona na tabela
     table.innerHTML += `
-        <tr>
-            <td>${newProduct.id}</td>
+        <tr data-id="${newProduct.id}">
+            <td>${adds.length}</td>
             <td>${newProduct.product}</td>
             <td>R$ ${newProduct.price.toFixed(2)}</td>
             <td>${newProduct.quantity}</td>
@@ -35,55 +33,88 @@ button_add.addEventListener("click", () => {
         </tr>
     `;
 
-    calcular()
+    product.value = "";
+    price.value = "";
+    quantity.value = "";
+
+    calcular();
 });
 
+
+// EXCLUIR PRODUTO
 table.addEventListener("click", (event) => {
 
     let deleteButton = event.target.closest(".delete-btn");
 
     if (deleteButton) {
-        deleteButton.closest("tr").remove();
+
+        let row = deleteButton.closest("tr");
+
+        let id = Number(row.dataset.id);
+
+        // remove do array
+        adds = adds.filter(item => item.id !== id);
+
+        // remove da tabela
+        row.remove();
+
+        // recalcula
+        calcular();
     }
 });
 
 
-// Cálculos
+// CÁLCULOS
+function calcular() {
 
-let totalText = document.querySelector("span")
+    let timePrint = Number(document.querySelector("#time").value);
+    let qtdFilamento = Number(document.querySelector("#quantity").value);
+    let priceFilamento = Number(document.querySelector("#price").value);
+    let profit = Number(document.querySelector("#profit").value);
+    let labor = Number(document.querySelector("#labor").value);
 
-function calcular(){
-    let timePrint = document.querySelector("#time");
-    let qtdFilamento = document.querySelector("#quantity");
-    let priceFilamento = document.querySelector("#price");
-    let profit = Number(document.querySelector("#profit").value)
-    let labor = Number(document.querySelector("#labor").value)
+    let custoTimePrint = timePrint * 0.2;
 
-    let custoTimePrint = Number(timePrint.value) * 0.2;
-    let custoFilamento = (Number(qtdFilamento.value) / 1000) * Number(priceFilamento.value);
+    let custoFilamento =
+        (qtdFilamento / 1000) * priceFilamento;
 
     let totalAdds = adds.reduce((total, item) => {
-        return total + (item.price * item.quantity)
-    }, 0)
+        return total + (item.price * item.quantity);
+    }, 0);
 
-    let custoTotal = (custoFilamento + custoTimePrint + totalAdds + labor) * (1 + profit / 100);
+    let custoSemLabor =
+        (custoFilamento + custoTimePrint + totalAdds)
+        * (1 + profit / 100);
 
-    console.log("Custo tempo:", custoTimePrint);
-    console.log("Custo filamento:", custoFilamento);
-    console.log("Mão de Obra:", labor);
-    console.log(custoTotal)
+    let custoFinal = custoSemLabor + labor;
 
-    totalText.textContent = `R$${custoTotal.toFixed(2)}`;
-
+    totalText.textContent = `R$ ${custoFinal.toFixed(2)}`;
 }
 
+
+// ATUALIZAR AUTOMATICAMENTE
 document.querySelectorAll("input").forEach(input => {
-    input.addEventListener("input", calcular);
+
+    input.addEventListener("input", () => {
+
+        // impede números negativos
+        if (
+            input.type === "number" &&
+            Number(input.value) < 0
+        ) {
+            input.value = 0;
+        }
+
+        calcular();
+    });
 });
 
+
+// LUCRO ENTRE 0 E 100
 let profitInput = document.querySelector("#profit");
 
 profitInput.addEventListener("input", () => {
+
     if (Number(profitInput.value) > 100) {
         profitInput.value = 100;
     }
@@ -95,14 +126,10 @@ profitInput.addEventListener("input", () => {
     calcular();
 });
 
+
+// DEFINE MIN=0 NOS INPUTS NUMBER
 document.querySelectorAll('input[type="number"]').forEach(input => {
     input.min = 0;
-
-    input.addEventListener("input", () => {
-        if (Number(input.value) < 0) {
-            input.value = 0;
-        }
-
-        calcular();
-    });
 });
+
+calcular();
