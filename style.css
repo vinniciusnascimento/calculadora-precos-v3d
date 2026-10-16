@@ -1,5 +1,382 @@
-*{
+@import url('https://fonts.googleapis.com/css2?family=Audiowide&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
+
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: "DM Sans", sans-serif;
+}
+
+body {
+    background:
+        radial-gradient(
+            circle at 50% 0%,
+            rgba(96, 246, 55, 0.08),
+            transparent 35%
+        ),
+        linear-gradient(
+            55deg,
+            #121212 0%,
+            rgb(0, 18, 2) 100%
+        );
+
+    min-height: 100vh;
+    padding: 20px 30px 60px;
+    color: white;
+}
+
+
+/* =========================
+   LOGO
+========================= */
+
+.logo {
+    width: 150px;
+    display: block;
+    margin: 10px auto 50px;
+}
+
+
+/* =========================
+   CONTEÚDO
+========================= */
+
+.content {
+    width: 100%;
+    max-width: 1240px;
+    margin: 0 auto;
+}
+
+.block {
+    margin-bottom: 48px;
+}
+
+
+/* =========================
+   TÍTULOS
+========================= */
+
+h1 {
+    color: #60F637;
+    font-size: 36px;
+    font-family: "Audiowide", sans-serif;
+    font-weight: 400;
+    text-align: left;
+    margin-bottom: 10px;
+}
+
+h2 {
+    font-size: 24px;
+    font-weight: 500;
+}
+
+
+/* =========================
+   INPUTS
+========================= */
+
+.inputs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.inputs.style-2 {
+    grid-template-columns: 2fr 1fr 1fr 150px;
+    align-items: end;
+}
+
+.box-input {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    color: white;
+}
+
+.box-input label {
+    font-size: 15px;
+    font-weight: 500;
+    color: #e8e8e8;
+}
+
+input {
+    background-color: rgba(217, 217, 217, 0.06);
+    border-radius: 10px;
+    border: 1px solid rgba(96, 246, 55, 0.7);
+
+    height: 50px;
+    width: 100%;
+
+    padding: 0 15px;
+
+    color: white;
+    font-size: 16px;
+
+    outline: none;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+input:hover {
+    border-color: #60F637;
+}
+
+input:focus {
+    border-color: #60F637;
+    background-color: rgba(96, 246, 55, 0.05);
+
+    box-shadow:
+        0 0 0 3px rgba(96, 246, 55, 0.1),
+        0 0 15px rgba(96, 246, 55, 0.08);
+}
+
+
+/* =========================
+   BOTÃO ADICIONAR
+========================= */
+
+input[type="button"] {
+    cursor: pointer;
+
+    background-color: #60F637;
+    color: #071006;
+
+    border: none;
+
+    height: 50px;
+
+    font-weight: 700;
+    font-size: 16px;
+}
+
+input[type="button"]:hover {
+    background-color: #79ff54;
+
+    box-shadow:
+        0 0 20px rgba(96, 246, 55, 0.25);
+
+    transform: translateY(-1px);
+}
+
+input[type="button"]:active {
+    transform: translateY(0);
+}
+
+
+/* =========================
+   TABELA
+========================= */
+
+table {
+    width: 100%;
+
+    border-collapse: separate;
+    border-spacing: 0;
+
+    margin-top: -15px;
+    margin-bottom: 50px;
+
+    background-color: rgba(255, 255, 255, 0.025);
+
+    border: 1px solid rgba(96, 246, 55, 0.25);
+    border-radius: 12px;
+
+    overflow: hidden;
+}
+
+th,
+td {
+    padding: 16px 20px;
+    text-align: left;
+}
+
+th {
+    background-color: rgba(96, 246, 55, 0.09);
+
+    color: #60F637;
+
+    font-size: 14px;
+    font-weight: 600;
+}
+
+td {
+    color: #e8e8e8;
+    font-size: 15px;
+
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+tr {
+    transition: background-color 0.2s ease;
+}
+
+tr:not(:first-child):hover {
+    background-color: rgba(96, 246, 55, 0.04);
+}
+
+
+/* =========================
+   ÁREA FINAL
+========================= */
+
+.final {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+
+    gap: 40px;
+
+    padding: 25px;
+
+    background-color: rgba(255, 255, 255, 0.035);
+
+    border: 1px solid rgba(96, 246, 55, 0.25);
+    border-radius: 15px;
+}
+
+.final .box-input {
+    width: 300px;
+}
+
+.final h2 {
+    color: #ddd;
+}
+
+.final h2 span {
+    color: #60F637;
+
+    font-family: "Audiowide", sans-serif;
+
+    font-size: 46px;
+    font-weight: 400;
+
+    margin-left: 8px;
+}
+
+
+/* =========================
+   REMOVE SETINHAS NUMBER
+========================= */
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+/* =========================
+   BOTÃO EXCLUIR
+========================= */
+
+.action-column {
+    width: 70px;
+    text-align: center;
+}
+
+.delete-btn {
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin: 0 auto;
+
+    border: 1px solid rgba(255, 70, 70, 0.35);
+    border-radius: 8px;
+
+    background-color: rgba(255, 70, 70, 0.08);
+    color: #ff4646;
+
+    cursor: pointer;
+
+    font-size: 15px;
+
+    transition: 0.2s ease;
+}
+
+.delete-btn:hover {
+    background-color: #ff4646;
+    color: white;
+
+    border-color: #ff4646;
+
+    box-shadow: 0 0 15px rgba(255, 70, 70, 0.25);
+
+    transform: scale(1.05);
+}
+
+.delete-btn:active {
+    transform: scale(0.95);
+}
+
+
+/* =========================
+   RESPONSIVIDADE
+========================= */
+
+@media (max-width: 1000px) {
+
+    .inputs {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .inputs.style-2 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+
+@media (max-width: 650px) {
+
+    body {
+        padding: 20px;
+    }
+
+    .logo {
+        width: 120px;
+        margin-bottom: 40px;
+    }
+
+    h1 {
+        font-size: 27px;
+    }
+
+    .inputs,
+    .inputs.style-2 {
+        grid-template-columns: 1fr;
+    }
+
+    .final {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .final .box-input {
+        width: 100%;
+    }
+
+    .final h2 {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .final h2 span {
+        font-size: 27px;
+    }
+
+    table {
+        display: block;
+        overflow-x: auto;
+    }
 }
