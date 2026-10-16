@@ -62,6 +62,27 @@
             </tr>
         </table>
 
+        <div class="block">
+            <h1>Dados do Cliente</h1>
+
+            <div class="inputs">
+                <div class="box-input">
+                    <label for="clientName">Nome do Cliente</label>
+                    <input type="text" id="clientName">
+                </div>
+
+                <div class="box-input">
+                    <label for="clientPhone">Telefone</label>
+                    <input type="text" id="clientPhone">
+                </div>
+
+                <div class="box-input">
+                    <label for="deliveryDate">Prazo de Entrega</label>
+                    <input type="text" id="deliveryDate">
+                </div>
+            </div>
+        </div>
+
         <div class="final">
             <div class="box-input">
                 <label for="profit">Lucro (0-100%)</label>
@@ -77,8 +98,15 @@
                 <h2>Total: <span>R$0.00</span></h2>
             </div>
         </div>
+        <button id="generatePdf">
+            <i class="fa-solid fa-file-pdf"></i>
+            Exportar PDF
+        </button>
     </div>
 </body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.14.0/html2pdf.bundle.min.js"
+    integrity="sha512-+9GoO5OUX2MmPRHUH5dnOY+KGReMLcxywEvQxvAI0y5JxXh/lkz99dKj4xdYfODP3dMFsoZRz4CF/vHcaqa2Ag=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="script.js"></script>
 
 </html>
