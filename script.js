@@ -568,18 +568,14 @@ document.querySelector("#generatePdf").addEventListener("click", async () => {
 
 
         .pdf-document table {
-            display: table;
-            overflow: visible;
+            display: table;       
+            overflow: visible;    
             width: 100%;
-
             border-collapse: collapse;
-
             margin: 0;
-
             background: white;
-
             border: none;
-
+            border-radius: 0;  
         }
 
 
@@ -609,6 +605,8 @@ document.querySelector("#generatePdf").addEventListener("click", async () => {
                 1px solid #ddd;
 
         }
+
+        .pdf-document tr { page-break-inside: avoid; }
 
 
         .pdf-total {
@@ -754,9 +752,9 @@ document.querySelector("#generatePdf").addEventListener("click", async () => {
             scale: 2,
             useCORS: true,
             backgroundColor: "#ffffff",
-            windowWidth: 794,   // ignora as media queries do mobile
-            scrollX: 0,
-            scrollY: 0
+            windowWidth: 794,   
+            scrollX: 0,         
+            scrollY: 0          
         },
         jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
         pagebreak: { mode: ["avoid-all", "css", "legacy"] }
