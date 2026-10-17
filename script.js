@@ -417,18 +417,18 @@ document.querySelector("#generatePdf").addEventListener("click", () => {
     style.innerHTML = `
 
         .pdf-document {
-
             width: 794px;
             min-height: 1123px;
 
             background: white;
-
             color: #171717;
 
             padding: 55px;
 
             font-family: Arial, sans-serif;
 
+            box-sizing: border-box;
+            overflow: hidden;
         }
 
 
@@ -730,6 +730,12 @@ document.querySelector("#generatePdf").addEventListener("click", () => {
 
     pdf.appendChild(style);
 
+    pdf.style.position = "fixed";
+    pdf.style.left = "-10000px";
+    pdf.style.top = "0";
+    pdf.style.width = "794px";
+    pdf.style.background = "#fff";
+
     document.body.appendChild(pdf);
 
 
@@ -750,13 +756,16 @@ document.querySelector("#generatePdf").addEventListener("click", () => {
         },
 
         html2canvas: {
-
             scale: 2,
-
             useCORS: true,
+            backgroundColor: "#ffffff",
 
-            backgroundColor: "#ffffff"
+            // força a renderização como desktop
+            windowWidth: 1200,
+            windowHeight: 1600,
 
+            scrollX: 0,
+            scrollY: 0
         },
 
         jsPDF: {
