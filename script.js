@@ -80,6 +80,9 @@ function calcular() {
     let custoFilamento =
         (qtdFilamento / 1000) * priceFilamento;
 
+    let garantiaFalha =
+        custoFilamento * 0.05;
+
     let totalAdds = adds.reduce((total, item) => {
         return total + (item.price * item.quantity);
     }, 0);
@@ -88,9 +91,11 @@ function calcular() {
         (custoFilamento + custoTimePrint + totalAdds)
         * (1 + profit / 100);
 
-    let custoFinal = custoSemLabor + labor;
+    let custoFinal =
+        custoSemLabor + labor + garantiaFalha;
 
-    totalText.textContent = `R$ ${custoFinal.toFixed(2)}`;
+    totalText.textContent =
+        `R$ ${custoFinal.toFixed(2)}`;
 }
 
 
@@ -183,9 +188,11 @@ document.querySelector("#generatePdf").addEventListener("click", async () => {
         (custoFilamento + custoTimePrint + totalAdds)
         * (1 + profit / 100);
 
+    let garantiaFalha = custoFilamento * 0.05;
 
     const custoFinal =
-        custoSemLabor + labor;
+        custoSemLabor + labor + garantiaFalha;
+
 
 
     // =========================
@@ -298,22 +305,37 @@ document.querySelector("#generatePdf").addEventListener("click", async () => {
 
             <div class="pdf-details">
 
-                <div>
-                    <span>Tempo de impressão</span>
-                    <strong>${timePrint} horas</strong>
-                </div>
-
-                <div>
-                    <span>Material utilizado</span>
-                    <strong>${qtdFilamento} g</strong>
-                </div>
-
-                <div>
-                    <span>Prazo de entrega</span>
-                    <strong>${deliveryDate}</strong>
-                </div>
-
+            <div>
+                <span>Tempo de impressão</span>
+                <strong>${timePrint} horas</strong>
             </div>
+
+            <div>
+                <span>Material utilizado</span>
+                <strong>${qtdFilamento} g</strong>
+            </div>
+
+            <div>
+                <span>Preço do filamento</span>
+                <strong>R$ ${Number(priceFilamento).toFixed(2)} / kg</strong>
+            </div>
+
+            <div>
+                <span>Custo do filamento</span>
+                <strong>R$ ${Number(custoFilamento).toFixed(2)}</strong>
+            </div>
+
+            <div>
+                <span>Garantia de falha (5%)</span>
+                <strong>R$ ${garantiaFalha.toFixed(2)}</strong>
+            </div>
+
+            <div>
+                <span>Prazo de entrega</span>
+                <strong>${deliveryDate}</strong>
+            </div>
+
+             </div>
 
 
             <h2>Itens</h2>
