@@ -8,6 +8,8 @@ let totalText = document.querySelector("span");
 
 let adds = [];
 
+console.log("Version: 1.0")
+
 button_add.addEventListener("click", () => {
 
     let newProduct = {
