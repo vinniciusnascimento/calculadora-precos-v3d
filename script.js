@@ -134,7 +134,7 @@ document.querySelectorAll('input[type="number"]').forEach(input => {
 
 calcular();
 
-document.querySelector("#generatePdf").addEventListener("click", () => {
+document.querySelector("#generatePdf").addEventListener("click", async () => {
 
     const clientName =
         document.querySelector("#clientName").value || "Não informado";
@@ -566,7 +566,8 @@ document.querySelector("#generatePdf").addEventListener("click", () => {
 
 
         .pdf-document table {
-
+            display: table;
+            overflow: visible;
             width: 100%;
 
             border-collapse: collapse;
@@ -738,52 +739,33 @@ document.querySelector("#generatePdf").addEventListener("click", () => {
 
     document.body.appendChild(pdf);
 
+    const logo = pdf.querySelector(".pdf-logo");
+    await new Promise(res => {
+        if (logo.complete) return res();
+        logo.onload = logo.onerror = res;
+    });
+
 
     // =========================
     // CONFIGURAÇÃO HTML2PDF
     // =========================
 
+    pdf.style.width = "794px";
+
     const options = {
-
         margin: 0,
-
-        filename:
-            `Proposta-V3D-${clientName}.pdf`,
-
-        image: {
-            type: "jpeg",
-            quality: 0.98
-        },
-
+        filename: `Proposta-V3D-${clientName}.pdf`,
+        image: { type: "jpeg", quality: 0.98 },
         html2canvas: {
             scale: 2,
             useCORS: true,
             backgroundColor: "#ffffff",
-
-            // força a renderização como desktop
-            windowWidth: 1200,
-            windowHeight: 1600,
-
+            windowWidth: 794,   // ignora as media queries do mobile
             scrollX: 0,
             scrollY: 0
         },
-
-        jsPDF: {
-
-            unit: "mm",
-
-            format: "a4",
-
-            orientation: "portrait"
-
-        },
-
-        pagebreak: {
-
-            mode: ["avoid-all", "css", "legacy"]
-
-        }
-
+        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+        pagebreak: { mode: ["avoid-all", "css", "legacy"] }
     };
 
 
