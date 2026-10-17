@@ -733,14 +733,6 @@ document.querySelector("#generatePdf").addEventListener("click", async () => {
 
     pdf.appendChild(style);
 
-    pdf.style.position = "fixed";
-    pdf.style.left = "-10000px";
-    pdf.style.top = "0";
-    pdf.style.width = "794px";
-    pdf.style.background = "#fff";
-
-    document.body.appendChild(pdf);
-
     const logo = pdf.querySelector(".pdf-logo");
     await new Promise(res => {
         if (logo.complete) return res();
