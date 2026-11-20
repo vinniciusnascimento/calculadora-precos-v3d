@@ -4,36 +4,94 @@ let quantity = document.querySelector("#quantity-add");
 let button_add = document.querySelector("#add");
 
 let table = document.querySelector("table");
-let totalText = document.querySelector("span");
+let totalText = document.querySelector("#total");
 
 let adds = [];
 
+// Constantes de cálculo
+const CUSTO_HORA_IMPRESSAO = 0.2; // R$ por hora de impressão
+const TAXA_GARANTIA_FALHA = 0.05; // 5% sobre o custo do filamento
+
 console.log("Version: 1.0")
+
+// Arredonda valores monetários para 2 casas (evita diferenças de centavos)
+function arredondar(valor) {
+    return Math.round((valor + Number.EPSILON) * 100) / 100;
+}
+
+// Escapa texto digitado pelo usuário antes de inserir no HTML
+function escapeHTML(texto) {
+    return String(texto)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
+
+// Lê um input numérico; valores vazios, inválidos ou negativos viram 0
+function lerNumero(selector) {
+    const valor = Number(document.querySelector(selector).value);
+    return Number.isFinite(valor) && valor > 0 ? valor : 0;
+}
+
+// Redesenha as linhas de adicionais (mantém a numeração sequencial)
+function renderAdds() {
+    table.querySelectorAll("tr[data-id]").forEach(row => row.remove());
+
+    const tbody = table.querySelector("tbody") || table;
+
+    adds.forEach((item, index) => {
+        tbody.insertAdjacentHTML("beforeend", `
+            <tr data-id="${item.id}">
+                <td>${index + 1}</td>
+                <td>${escapeHTML(item.product)}</td>
+                <td>R$ ${item.price.toFixed(2)}</td>
+                <td>${item.quantity}</td>
+                <td class="action-column">
+                    <button class="delete-btn" type="button">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        `);
+    });
+}
 
 button_add.addEventListener("click", () => {
 
+    const nome = product.value.trim();
+    const preco = Number(price.value);
+    // Quantidade em branco assume 1 unidade
+    const qtd = quantity.value === "" ? 1 : Number(quantity.value);
+
+    if (!nome) {
+        alert("Informe o nome do produto adicional.");
+        product.focus();
+        return;
+    }
+
+    if (price.validity.badInput || price.value === "" || !Number.isFinite(preco) || preco <= 0) {
+        alert("Informe um preço válido (maior que zero) para o adicional.");
+        price.focus();
+        return;
+    }
+
+    if (quantity.validity.badInput || !Number.isFinite(qtd) || qtd <= 0) {
+        alert("Informe uma quantidade válida (maior que zero) para o adicional.");
+        quantity.focus();
+        return;
+    }
+
     let newProduct = {
-        id: Date.now(),
-        product: product.value,
-        price: Number(price.value),
-        quantity: Number(quantity.value)
+        id: Date.now() + Math.random(),
+        product: nome,
+        price: arredondar(preco),
+        quantity: qtd
     };
 
     adds.push(newProduct);
-
-    table.innerHTML += `
-        <tr data-id="${newProduct.id}">
-            <td>${adds.length}</td>
-            <td>${newProduct.product}</td>
-            <td>R$ ${newProduct.price.toFixed(2)}</td>
-            <td>${newProduct.quantity}</td>
-            <td class="action-column">
-                <button class="delete-btn" type="button">
-                    <i class="fa-solid fa-trash"></i>
-                </button>
-            </td>
-        </tr>
-    `;
+    renderAdds();
 
     product.value = "";
     price.value = "";
@@ -57,8 +115,8 @@ table.addEventListener("click", (event) => {
         // remove do array
         adds = adds.filter(item => item.id !== id);
 
-        // remove da tabela
-        row.remove();
+        // redesenha a tabela (renumera os IDs)
+        renderAdds();
 
         // recalcula
         calcular();
@@ -66,33 +124,49 @@ table.addEventListener("click", (event) => {
 });
 
 
-// CÁLCULOS
+// CÁLCULOS (fonte única usada pela tela e pelo PDF)
+function calcularValores() {
+
+    const timePrint = lerNumero("#time");
+    const qtdFilamento = lerNumero("#quantity");
+    const priceFilamento = lerNumero("#price");
+    const profit = Math.min(lerNumero("#profit"), 100);
+    const labor = arredondar(lerNumero("#labor"));
+
+    const custoTimePrint = arredondar(timePrint * CUSTO_HORA_IMPRESSAO);
+
+    const custoFilamento = arredondar((qtdFilamento / 1000) * priceFilamento);
+
+    const garantiaFalha = arredondar(custoFilamento * TAXA_GARANTIA_FALHA);
+
+    // Soma os subtotais já arredondados, igual ao que aparece no PDF
+    const totalAdds = arredondar(adds.reduce((total, item) => {
+        return total + arredondar(item.price * item.quantity);
+    }, 0));
+
+    const custoSemLabor = arredondar(
+        (custoFilamento + custoTimePrint + totalAdds) * (1 + profit / 100)
+    );
+
+    const custoFinal = arredondar(custoSemLabor + labor + garantiaFalha);
+
+    return {
+        timePrint,
+        qtdFilamento,
+        priceFilamento,
+        profit,
+        labor,
+        custoTimePrint,
+        custoFilamento,
+        garantiaFalha,
+        totalAdds,
+        custoSemLabor,
+        custoFinal
+    };
+}
+
 function calcular() {
-
-    let timePrint = Number(document.querySelector("#time").value);
-    let qtdFilamento = Number(document.querySelector("#quantity").value);
-    let priceFilamento = Number(document.querySelector("#price").value);
-    let profit = Number(document.querySelector("#profit").value);
-    let labor = Number(document.querySelector("#labor").value);
-
-    let custoTimePrint = timePrint * 0.2;
-
-    let custoFilamento =
-        (qtdFilamento / 1000) * priceFilamento;
-
-    let garantiaFalha =
-        custoFilamento * 0.05;
-
-    let totalAdds = adds.reduce((total, item) => {
-        return total + (item.price * item.quantity);
-    }, 0);
-
-    let custoSemLabor =
-        (custoFilamento + custoTimePrint + totalAdds)
-        * (1 + profit / 100);
-
-    let custoFinal =
-        custoSemLabor + labor + garantiaFalha;
+    const { custoFinal } = calcularValores();
 
     totalText.textContent =
         `R$ ${custoFinal.toFixed(2)}`;
@@ -157,42 +231,14 @@ document.querySelector("#generatePdf").addEventListener("click", async () => {
     // CÁLCULOS
     // =========================
 
-    const timePrint =
-        Number(document.querySelector("#time").value);
-
-    const qtdFilamento =
-        Number(document.querySelector("#quantity").value);
-
-    const priceFilamento =
-        Number(document.querySelector("#price").value);
-
-    const profit =
-        Number(document.querySelector("#profit").value);
-
-    const labor =
-        Number(document.querySelector("#labor").value);
-
-
-    const custoTimePrint = timePrint * 0.2;
-
-    const custoFilamento =
-        (qtdFilamento / 1000) * priceFilamento;
-
-
-    const totalAdds = adds.reduce((total, item) => {
-        return total + (item.price * item.quantity);
-    }, 0);
-
-
-    const custoSemLabor =
-        (custoFilamento + custoTimePrint + totalAdds)
-        * (1 + profit / 100);
-
-    let garantiaFalha = custoFilamento * 0.05;
-
-    const custoFinal =
-        custoSemLabor + labor + garantiaFalha;
-
+    const {
+        timePrint,
+        qtdFilamento,
+        priceFilamento,
+        custoFilamento,
+        garantiaFalha,
+        custoFinal
+    } = calcularValores();
 
 
     // =========================
@@ -214,14 +260,14 @@ document.querySelector("#generatePdf").addEventListener("click", async () => {
         produtosHTML = adds.map((item, index) => {
 
             const subtotal =
-                item.price * item.quantity;
+                arredondar(item.price * item.quantity);
 
             return `
                 <tr>
                     <td>${index + 1}</td>
 
                     <td>
-                        ${item.product}
+                        ${escapeHTML(item.product)}
                     </td>
 
                     <td>
@@ -284,12 +330,12 @@ document.querySelector("#generatePdf").addEventListener("click", async () => {
 
                 <div>
                     <span>CLIENTE</span>
-                    <strong>${clientName}</strong>
+                    <strong>${escapeHTML(clientName)}</strong>
                 </div>
 
                 <div>
                     <span>TELEFONE</span>
-                    <strong>${clientPhone}</strong>
+                    <strong>${escapeHTML(clientPhone)}</strong>
                 </div>
 
                 <div>
@@ -332,7 +378,7 @@ document.querySelector("#generatePdf").addEventListener("click", async () => {
 
             <div>
                 <span>Prazo de entrega</span>
-                <strong>${deliveryDate}</strong>
+                <strong>${escapeHTML(deliveryDate)}</strong>
             </div>
 
              </div>
@@ -412,7 +458,7 @@ document.querySelector("#generatePdf").addEventListener("click", async () => {
 
                 <div>
                     <div class="signature-line"></div>
-                    <p>${clientName}</p>
+                    <p>${escapeHTML(clientName)}</p>
                 </div>
 
             </div>
